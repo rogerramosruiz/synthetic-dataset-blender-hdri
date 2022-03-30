@@ -1,0 +1,6 @@
+env/
+HDRIS/
+*.txt
+*.png
+__pycache__
+*.blend1
