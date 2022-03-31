@@ -88,3 +88,6 @@ def checkInsideFrame(obj):
     width  = int(scene.render.resolution_x * renderScale)
     height = int(scene.render.resolution_y * renderScale)
     return p1[0] >= 0 and p1[1] >= 0 and p2[0] <= width and p2[1] <= height
+
+def changeFocalLength():
+    cam.data.lens = random.randint(25,65)

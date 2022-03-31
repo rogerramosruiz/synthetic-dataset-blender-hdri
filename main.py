@@ -4,6 +4,7 @@ from mathutils import Euler
 from math import radians
 import bpy_extras
 import random
+import os
 
 scene = bpy.context.scene
 nodes = scene.world.node_tree.nodes
@@ -12,27 +13,10 @@ node_environment_name = "Environment Texture"
 
 sys.path.append(r'C:/Users/Roger/Documents/synthetic_dataset_HDRI')
 from transformations import transform, putOverGround
-from camera import projectCam, boundingBox, camBox
+from camera import projectCam, boundingBox, camBox, changeFocalLength
 from objOps import delete, copy
 from utils import init
-
-
-
-def changeHDRI(path):
-    node_environment = nodes[node_environment_name]
-    node_environment.image = bpy.data.images.load(path)
-    # node_environment.name  = node_environment_name
-
-def rotateHDRI():
-    node_map = nodes['Mapping']
-    node_map.inputs[2].default_value = [radians(0), radians(0), radians(25)]
-
-
-# file = 'konigsallee_8k.exr'
-# hdri = f"C:\\Users\\Roger\\Documents\\syntetic_dataset_HDRI\\HDRIS\\{file}"
-# changeHDRI(hdri)
-
-
+from hdri import changeHDRI
 
 
 def intersersct(obj1,obj2):
@@ -55,6 +39,7 @@ def chooseObjs(collection):
     return renderObjs, collectionsNames
 
 def useCollection(collection):
+    changeFocalLength()
     ground = bpy.context.scene.objects['Ground']
     coords = projectCam(cam)
     
@@ -63,10 +48,9 @@ def useCollection(collection):
     
     renObjs, colls = chooseObjs(collection)
     objects = []
-    
     global imgIndex
-    # img = changeBackground(imgs[imgIndex])
-    # imgIndex = (imgIndex + 1) % len(imgs)
+    img = changeHDRI(hdris[imgIndex])
+    imgIndex = (imgIndex + 1) % len(hdris)
     for i in renObjs:
         objc = copy(i)
         objc.hide_render = False
@@ -87,11 +71,11 @@ def useCollection(collection):
     save(objects, colls)
     for obj in objects:
         delete(obj)
-    # bpy.data.images.remove(img)
+    bpy.data.images.remove(img)
 
 def save(objs, colls = [0]):
     # filename = randomFilename()
-    filename = 'E:/Devs/Python/readyolo/monkeyhdir'
+    filename = f'{saveDir}/{imgIndex}'
     bpy.context.scene.render.filepath = f'{filename}'
     with open (f'{filename}.txt', 'w') as f:
         ln = len(objs)
@@ -105,13 +89,20 @@ def save(objs, colls = [0]):
 
 
 obj = bpy.context.scene.objects['Suzanne']
-groundName = 'Ground'
 cam =  bpy.data.objects['Camera']
 img_index = 0
 
+def main(n):
+    for i in collections:
+        for _ in range(n):
+            useCollection(i)
 
-saveDir = '.'
+
+saveDir = 'E:/Devs/Python/readyolo/dataset'
 collections    = bpy.data.collections['Objects'].children
 names          = init(collections, saveDir)
+imgIndex = 0
 
-useCollection(collections[0])
+hdrisDIr = 'C:/Users/Roger/Documents/synthetic_dataset_HDRI/HDRIS'
+hdris = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
+main(1)

@@ -43,8 +43,8 @@ def move(obj):
             return (randX, randY)
             # break
         c += 1
-        if c > 100:
-            print('This is happenign')
+        if c > 20:
+            print('This is happening')
             obj.data = data.copy()
             return None
         obj.data = data.copy()
@@ -74,10 +74,7 @@ def scale(obj):
 def putOverGround(obj):
     groundz = bpy.context.scene.objects['Ground'].location[2]
     z = minObj(obj)
-    # print(z)
     obj.location[2] -= z - groundz - 0.01
-    # z -= 0.01
-    # bpy.context.scene.objects['Ground'].location[2] = z
 
 def transform(obj):
     rotate(obj)
@@ -86,6 +83,4 @@ def transform(obj):
     putOverGround(obj)
     bpy.ops.object.transform_apply(rotation=True, scale=True)
     move(obj)
-    # ground = copy('Ground')
-    # ground.location = (objx, objy, ground.location[2])
-    # return ground
+    bpy.ops.object.transform_apply(location=True)
