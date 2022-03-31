@@ -1,19 +1,13 @@
 import sys
+from textwrap import indent
 import bpy
-from mathutils import Euler
-from math import radians
-import bpy_extras
 import random
 import os
 
-scene = bpy.context.scene
-nodes = scene.world.node_tree.nodes
-node_environment_name = "Environment Texture"
-
-
 sys.path.append(r'C:/Users/Roger/Documents/synthetic_dataset_HDRI')
-from transformations import transform, putOverGround
-from camera import projectCam, boundingBox, camBox, changeFocalLength
+
+from transformations import transform
+from camera import projectCam, boundingBox, changeFocalLength
 from objOps import delete, copy
 from utils import init
 from hdri import changeHDRI
@@ -25,15 +19,14 @@ def intersersct(obj1,obj2):
     o2p1, o2p2  = boundingBox(obj2)
     return o1p1[0] < o2p2[0] and o1p2[0] > o2p1[0] and o1p1[1] < o2p2[1] and o1p2[1] > o2p1[1] 
 
-
-
 def chooseObjs(collection):
     collectionsNames = [collection.name]
     prob_many_objs = 1
+    dist_objs  = 1
     renderObjs = [random.choice(collection.all_objects).name]
-    if random.random() > 0:
+    if random.random() < prob_many_objs:
         for i in collections:
-            if random.random() < prob_many_objs:
+            if random.random() < dist_objs:
                 renderObjs.append(random.choice(i.all_objects).name)
                 collectionsNames.append(i.name)
     return renderObjs, collectionsNames
@@ -41,8 +34,8 @@ def chooseObjs(collection):
 def useCollection(collection):
     changeFocalLength()
     ground = bpy.context.scene.objects['Ground']
-    coords = projectCam(cam)
-    
+    coords = projectCam()
+
     for i in range(len(coords)):
         ground.data.vertices[i].co = coords[i]
     
@@ -56,53 +49,54 @@ def useCollection(collection):
         objc.hide_render = False
         transform(objc)
         b = True
-        for _ in range(100):
+        for j in range(100):
             for o in objects:
-                b = b and not intersersct(o, objc)            
+                b = b and not intersersct(o, objc)
             if b:
                 objects.append(objc)
                 break
-            else:
+            elif j != 99:
+                print(j, objc.name)
                 objc.data = bpy.context.scene.objects[i].data.copy()
                 transform(objc)
                 b = True
         if not b:
-            delete(obj)
+            delete(objc)
     save(objects, colls)
     for obj in objects:
+        obj.hide_render = True
         delete(obj)
     bpy.data.images.remove(img)
 
 def save(objs, colls = [0]):
     # filename = randomFilename()
-    filename = f'{saveDir}/{imgIndex}'
+    global index
+    filename = f'{saveDir}/{index}'
+    index += 1
     bpy.context.scene.render.filepath = f'{filename}'
     with open (f'{filename}.txt', 'w') as f:
         ln = len(objs)
         for i in range(len(objs)):
             x, y, w, h = boundingBox(objs[i], True)
             f.write(f'{names[colls[i]]} {x} {y} {w} {h}')
-            # f.write(f'0 {x} {y} {w} {h}')
             if i != ln - 1 :
                 f.write('\n')  
     bpy.ops.render.render(write_still = True)
 
 
-obj = bpy.context.scene.objects['Suzanne']
-cam =  bpy.data.objects['Camera']
-img_index = 0
 
 def main(n):
     for i in collections:
         for _ in range(n):
             useCollection(i)
 
-
-saveDir = 'E:/Devs/Python/readyolo/dataset'
-collections    = bpy.data.collections['Objects'].children
-names          = init(collections, saveDir)
-imgIndex = 0
-
-hdrisDIr = 'C:/Users/Roger/Documents/synthetic_dataset_HDRI/HDRIS'
-hdris = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
-main(1)
+if __name__ == '__main__':
+    # cam         =  bpy.data.objects['Camera']
+    saveDir     = 'E:/Devs/Python/readyolo/dataset'
+    collections = bpy.data.collections['Objects'].children
+    names       = init(collections, saveDir)
+    index       = 0
+    imgIndex    = 0
+    hdrisDIr    = 'C:/Users/Roger/Documents/synthetic_dataset_HDRI/HDRIS'
+    hdris       = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
+    main(5)

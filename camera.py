@@ -62,7 +62,7 @@ def boundingBox(obj, yoloFormat = False, cropped = True):
     return p1, p2
 
     
-def projectCam(cam, add= False):
+def projectCam():
     planeCoords = []
     scene = bpy.context.scene
     mat = cam.matrix_world
@@ -76,9 +76,7 @@ def projectCam(cam, add= False):
         pt = ilp(translation, translation +  v, (0, 0, 0), (0, 0, 1), True)    
         if pt and (pt - translation).dot(v) > 0:
             planeCoords.append(pt)
-            if add:
-                bpy.ops.mesh.primitive_cube_add(location = pt)
-
+ 
     return planeCoords
 
 def checkInsideFrame(obj):

@@ -8,22 +8,8 @@ from camera import camBox, projectCam, checkInsideFrame
 from utils import minObj
 # from data import scale_min, scale_max, minrot, maxrot, prob_roate, prob_scale
 
-# def move(obj):
-#     maxY = bpy.context.scene.objects['Plane'].location[1] - obj.dimensions[1]
-#     randY = random.uniform(-1, maxY)
-#     obj.location[1] = randY 
-#     width, height = camBox(obj)
-#     owidth, _, oheight = obj.dimensions    
-#     owidth /= 2
-#     oheight /= 2
-#     x = width - owidth
-#     z = height - oheight
-#     randX = random.uniform(-x, x)
-#     randZ = random.uniform(-z , z)
-#     obj.location = (randX, randY, randZ)
-
 def move(obj):
-    coords = projectCam(bpy.data.objects['Camera'], False)
+    coords = projectCam()
     minx = maxx = coords[0][0]
     miny = maxy = coords[0][1]
     for i in coords:
@@ -40,13 +26,11 @@ def move(obj):
         select(obj)
         bpy.ops.object.transform_apply(location=True)
         if checkInsideFrame(obj):
-            return (randX, randY)
-            # break
+            break
         c += 1
         if c > 20:
-            print('This is happening')
             obj.data = data.copy()
-            return None
+            break
         obj.data = data.copy()
 
 def rotate(obj): 
@@ -65,11 +49,6 @@ def scale(obj):
     scale = random.uniform(scale_min, scale_max)
     scl = [scale for _ in range(3)]
     obj.scale = scl
-
-# def putOverGround(obj):
-#     groundz = bpy.context.scene.objects['Ground'].location[2]
-#     z = minObj(obj)
-#     obj.location[2] += groundz - z
 
 def putOverGround(obj):
     groundz = bpy.context.scene.objects['Ground'].location[2]
