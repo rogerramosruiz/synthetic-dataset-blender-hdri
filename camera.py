@@ -87,8 +87,11 @@ def checkInsideFrame(obj):
     height = int(scene.render.resolution_y * renderScale)
     return p1[0] >= 0 and p1[1] >= 0 and p2[0] <= width and p2[1] <= height
 
-def changeFocalLength():
-    cam.data.lens = random.randint(25,65)
+def changeFocalLength(val= None):
+    if val:
+        cam.data.lens = val
+    else:
+        cam.data.lens = random.randint(25,65)
 
 def changeResolution():
     scene = bpy.context.scene
