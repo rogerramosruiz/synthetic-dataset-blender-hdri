@@ -89,3 +89,28 @@ def checkInsideFrame(obj):
 
 def changeFocalLength():
     cam.data.lens = random.randint(25,65)
+
+def changeResolution():
+    scene = bpy.context.scene
+    commonRes= [(480, 360), (852,480), (1280,720), (1920, 1080)]
+    highRes = [(2048, 1080), (2560, 1440), (4096, 2160)]
+    if random.random() < 0.6:
+        x, y = random.choice(commonRes)
+        if random.random() < 0.05:
+            # High resolution
+            x, y = random.choice(highRes)
+        
+        if random.random() < 0.3:
+            # Flip the resolution
+            a = x
+            x = y 
+            y = a
+    else:
+        while True:
+            x = random.randint(852, 1920)
+            y = random.randint(480, 1080)
+            r = x / y 
+            if r > 0.8 and r < 2:
+                break
+    scene.render.resolution_x = x
+    scene.render.resolution_y = y

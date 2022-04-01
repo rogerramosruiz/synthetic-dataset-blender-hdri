@@ -1,5 +1,4 @@
 import sys
-from textwrap import indent
 import bpy
 import random
 import os
@@ -7,7 +6,7 @@ import os
 sys.path.append(r'C:/Users/Roger/Documents/synthetic_dataset_HDRI')
 
 from transformations import transform
-from camera import projectCam, boundingBox, changeFocalLength
+from camera import changeResolution, projectCam, boundingBox, changeFocalLength
 from objOps import delete, copy
 from utils import init
 from hdri import changeHDRI
@@ -32,6 +31,7 @@ def chooseObjs(collection):
     return renderObjs, collectionsNames
 
 def useCollection(collection):
+    changeResolution()
     changeFocalLength()
     ground = bpy.context.scene.objects['Ground']
     coords = projectCam()
@@ -56,7 +56,6 @@ def useCollection(collection):
                 objects.append(objc)
                 break
             elif j != 99:
-                print(j, objc.name)
                 objc.data = bpy.context.scene.objects[i].data.copy()
                 transform(objc)
                 b = True
@@ -84,14 +83,13 @@ def save(objs, colls = [0]):
     bpy.ops.render.render(write_still = True)
 
 
-
 def main(n):
     for i in collections:
         for _ in range(n):
             useCollection(i)
 
 if __name__ == '__main__':
-    # cam         =  bpy.data.objects['Camera']
+    random.seed(20)
     saveDir     = 'E:/Devs/Python/readyolo/dataset'
     collections = bpy.data.collections['Objects'].children
     names       = init(collections, saveDir)
@@ -99,4 +97,4 @@ if __name__ == '__main__':
     imgIndex    = 0
     hdrisDIr    = 'C:/Users/Roger/Documents/synthetic_dataset_HDRI/HDRIS'
     hdris       = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
-    main(5)
+    main(3)
