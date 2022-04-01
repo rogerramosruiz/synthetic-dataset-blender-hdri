@@ -2,15 +2,22 @@ import sys
 import bpy
 import random
 import os
+import string
 
 sys.path.append(r'C:/Users/Roger/Documents/synthetic_dataset_HDRI')
 
 from transformations import transform
-from camera import changeResolution, projectCam, boundingBox, changeFocalLength
+from camera import changeResolution, boundingBox, changeFocalLength
 from objOps import delete, copy
 from utils import init
 from hdri import changeHDRI
+from data import images_per_class, saveDir, hdrisDIr, filenameSize, prob_many_objs, prob_add_obj
+from ground import adjustGround
 
+def randomFilename():
+    letters = string.ascii_lowercase + string.ascii_uppercase
+    name = ''.join(random.choice(letters) for _ in range(filenameSize))
+    return f'{saveDir}/{name}'
 
 def intersersct(obj1,obj2):
     # Boundingbox the objects
@@ -20,12 +27,10 @@ def intersersct(obj1,obj2):
 
 def chooseObjs(collection):
     collectionsNames = [collection.name]
-    prob_many_objs = 1
-    dist_objs  = 1
     renderObjs = [random.choice(collection.all_objects).name]
     if random.random() < prob_many_objs:
         for i in collections:
-            if random.random() < dist_objs:
+            if random.random() < prob_add_obj:
                 renderObjs.append(random.choice(i.all_objects).name)
                 collectionsNames.append(i.name)
     return renderObjs, collectionsNames
@@ -33,12 +38,7 @@ def chooseObjs(collection):
 def useCollection(collection):
     changeResolution()
     changeFocalLength()
-    ground = bpy.context.scene.objects['Ground']
-    coords = projectCam()
-
-    for i in range(len(coords)):
-        ground.data.vertices[i].co = coords[i]
-    
+    adjustGround()
     renObjs, colls = chooseObjs(collection)
     objects = []
     global imgIndex
@@ -68,10 +68,7 @@ def useCollection(collection):
     bpy.data.images.remove(img)
 
 def save(objs, colls = [0]):
-    # filename = randomFilename()
-    global index
-    filename = f'{saveDir}/{index}'
-    index += 1
+    filename = randomFilename()
     bpy.context.scene.render.filepath = f'{filename}'
     with open (f'{filename}.txt', 'w') as f:
         ln = len(objs)
@@ -88,13 +85,10 @@ def main(n):
         for _ in range(n):
             useCollection(i)
 
+
 if __name__ == '__main__':
-    random.seed(20)
-    saveDir     = 'E:/Devs/Python/readyolo/dataset'
+    imgIndex    = 0
+    hdris       = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
     collections = bpy.data.collections['Objects'].children
     names       = init(collections, saveDir)
-    index       = 0
-    imgIndex    = 0
-    hdrisDIr    = 'C:/Users/Roger/Documents/synthetic_dataset_HDRI/HDRIS'
-    hdris       = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
-    main(3)
+    main(images_per_class)

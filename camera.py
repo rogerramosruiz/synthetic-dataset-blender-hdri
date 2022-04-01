@@ -5,7 +5,7 @@ import bpy_extras
 from mathutils.geometry import intersect_line_plane as ilp
 
 from utils import convertYolo, distance
-
+from data import common_resolutions, high_resolutions, prob_common_res, prob_high_res, prob_flip_res
 cam =  bpy.data.objects['Camera']
 
 def getAngles():
@@ -92,15 +92,12 @@ def changeFocalLength():
 
 def changeResolution():
     scene = bpy.context.scene
-    commonRes= [(480, 360), (852,480), (1280,720), (1920, 1080)]
-    highRes = [(2048, 1080), (2560, 1440), (4096, 2160)]
-    if random.random() < 0.6:
-        x, y = random.choice(commonRes)
-        if random.random() < 0.05:
+    if random.random() < prob_common_res:
+        x, y = random.choice(common_resolutions)
+        if random.random() < prob_high_res:
             # High resolution
-            x, y = random.choice(highRes)
-        
-        if random.random() < 0.3:
+            x, y = random.choice(high_resolutions)
+        if random.random() < prob_flip_res:
             # Flip the resolution
             a = x
             x = y 

@@ -3,10 +3,10 @@ import random
 from math import radians
 from mathutils import Euler
 
-from objOps import select, copy
-from camera import camBox, projectCam, checkInsideFrame
+from objOps import select
+from camera import projectCam, checkInsideFrame
 from utils import minObj
-# from data import scale_min, scale_max, minrot, maxrot, prob_roate, prob_scale
+from data import scale_min, scale_max, minrot, maxrot, prob_roate, prob_scale
 
 def move(obj):
     coords = projectCam()
@@ -34,21 +34,17 @@ def move(obj):
         obj.data = data.copy()
 
 def rotate(obj): 
-    # if random.random() < prob_roate:
-    minrot = [0, 0, 0]
-    maxrot = [360, 360, 360]
-    rx = radians(random.randint(minrot[0], maxrot[0]))
-    ry = radians(random.randint(minrot[1], maxrot[1]))
-    rz = radians(random.randint(minrot[2], maxrot[2]))
-    obj.rotation_euler = Euler((rx, ry, rz), 'XYZ')
+    if random.random() < prob_roate:
+        rx = radians(random.randint(minrot[0], maxrot[0]))
+        ry = radians(random.randint(minrot[1], maxrot[1]))
+        rz = radians(random.randint(minrot[2], maxrot[2]))
+        obj.rotation_euler = Euler((rx, ry, rz), 'XYZ')
 
 def scale(obj):
-    # if random.random() < prob_scale:
-    scale_min = 0.5
-    scale_max = 1.5
-    scale = random.uniform(scale_min, scale_max)
-    scl = [scale for _ in range(3)]
-    obj.scale = scl
+    if random.random() < prob_scale:
+        scale = random.uniform(scale_min, scale_max)
+        scl = [scale for _ in range(3)]
+        obj.scale = scl
 
 def putOverGround(obj):
     groundz = bpy.context.scene.objects['Ground'].location[2]
