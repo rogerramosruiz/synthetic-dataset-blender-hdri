@@ -13,6 +13,7 @@ from utils import init
 from hdri import changeHDRI
 from data import images_per_class, saveDir, hdrisDIr, filenameSize, prob_many_objs, prob_add_obj
 from ground import adjustGround
+from color import shiftColor
 
 def randomFilename():
     letters = string.ascii_lowercase + string.ascii_uppercase
@@ -41,6 +42,7 @@ def useCollection(collection):
     adjustGround()
     renObjs, colls = chooseObjs(collection)
     objects = []
+    materials = []
     global imgIndex
     img = changeHDRI(hdris[imgIndex])
     imgIndex = (imgIndex + 1) % len(hdris)
@@ -48,6 +50,7 @@ def useCollection(collection):
         objc = copy(i)
         objc.hide_render = False
         transform(objc)
+        materials += shiftColor(objc, bpy.context.scene.objects[i].users_collection[0].name) 
         b = True
         for j in range(100):
             for o in objects:
@@ -66,7 +69,8 @@ def useCollection(collection):
         obj.hide_render = True
         delete(obj)
     bpy.data.images.remove(img)
-
+    for material in materials:
+        bpy.data.materials.remove(material)
 def save(objs, colls = [0]):
     filename = randomFilename()
     bpy.context.scene.render.filepath = f'{filename}'
