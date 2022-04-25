@@ -1,4 +1,6 @@
+from multiprocessing.sharedctypes import Value
 import random
+from signal import raise_signal
 from mathutils import Color
 from data import objData
 
@@ -6,11 +8,7 @@ def shiftColor(obj,collectionName):
     if 'custom_function' in objData[collectionName]:
         return objData[collectionName]['custom_function'](obj, collectionName)
     materials = []
-    if 'colors' in objData[collectionName]:
-        colors = objData[collectionName]['colors']  #if 'colors' in objData[collectionName] else None
-        color = colors[random.randint(0,len(colors) - 1)]  #if 'colors' in objData[collectionName] else None
-    else:
-        color = None
+    color = random.choice(objData[collectionName]['colors']) if 'colors' in objData[collectionName] else None
     for i in range(len(obj.material_slots)):
         material = obj.material_slots[i].material
         newMaterial = material.copy()
