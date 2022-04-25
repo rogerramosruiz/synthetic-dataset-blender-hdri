@@ -19,6 +19,7 @@ def move(obj):
         maxy = max(maxy, i[1])
     data = obj.data.copy()
     c = 0
+    maxy = min(25, maxy)
     while True:
         randX = random.uniform(minx, maxx)
         randY = random.uniform(miny, maxy)

@@ -9,8 +9,8 @@ prob_add_obj     = 0.6
 # transformation
 # scale
 prob_scale       = 0.9
-scale_min        = 0.5
-scale_max        = 1.5
+scale_min        = 1
+scale_max        = 2
 
 # rotation (x, y, z) between -360 and 360
 prob_roate       = 0.9
