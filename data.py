@@ -4,7 +4,7 @@ filenameSize     = 10
 saveDir          = 'E:/Devs/Python/readyolo/dataset/'
 hdrisDIr         = 'C:/Users/Roger/Documents/synthetic_dataset_HDRI/HDRIS'
 prob_many_objs   = 0.4
-prob_add_obj     = 0.6
+prob_add_obj     = 0.5
 
 # transformation
 # scale
@@ -41,10 +41,10 @@ objData = {
         'inner label': 0
     },
     'container': {
-        'Plastic_transparent': 0.05,
+        'Plastic_transparent': 0.005,
     },
     'cup': {
-        'Plastic_transparent': 0.05
+        'Plastic_transparent': 0.005
     },
     'gloves': {
         'gloves': 0.8,

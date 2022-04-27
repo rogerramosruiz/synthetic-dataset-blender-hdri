@@ -1,6 +1,4 @@
-from multiprocessing.sharedctypes import Value
 import random
-from signal import raise_signal
 from mathutils import Color
 from data import objData
 
@@ -67,4 +65,4 @@ matereialBSDFS = {
     'Plastic_transparent':  'Glass BSDF',
     'gloves'              :  'ColorRamp'
 }
-objData['gloves']['custom_function'] =  colorBottle
+objData['bottle']['custom_function'] =  colorBottle
