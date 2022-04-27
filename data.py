@@ -13,7 +13,7 @@ scale_min        = 1
 scale_max        = 2
 
 # rotation (x, y, z) between -360 and 360
-prob_roate       = 0.9
+prob_roate       = 0.7
 minrot           = [-90, 0, -90]
 maxrot           = [90, 360, 90]
 
@@ -22,7 +22,7 @@ min_hdri_rotation = [-45, 0 , 0]
 max_hdri_rotation = [15,  0,  360]
 
 # Camera
-common_resolutions = [(480, 360), (852,480), (1280,720), (1920, 1080)]
+common_resolutions = [(852,480), (1280,720), (1920, 1080)]
 high_resolutions   = [(2048, 1080), (2560, 1440), (4096, 2160)]
 prob_common_res    = 0.6
 prob_high_res      = 0.05
