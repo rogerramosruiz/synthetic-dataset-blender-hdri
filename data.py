@@ -3,7 +3,7 @@ images_per_class = 1
 filenameSize     = 10
 saveDir          = 'D:/dataset_shyntethic'
 hdrisDIr         = 'D:/Devs/python/synthetic-dataset-blender-hdri/HDRIS'
-prob_many_objs   = 0.4
+prob_many_objs   = 0.3
 prob_add_obj     = 0.5
 
 # transformation

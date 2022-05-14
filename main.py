@@ -43,9 +43,7 @@ def useCollection(collection):
     renObjs, colls = chooseObjs(collection)
     objects = []
     materials = []
-    global imgIndex
-    img = changeHDRI(hdris[imgIndex])
-    imgIndex = (imgIndex + 1) % len(hdris)
+    img = changeHDRI(random.choice(hdris))
     for i in renObjs:
         objc = copy(i)
         objc.hide_render = False
@@ -94,7 +92,6 @@ def main(n):
 
 
 if __name__ == '__main__':
-    imgIndex    = 0
     hdris       = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
     collections = bpy.data.collections['Objects'].children
     names       = init(collections, saveDir)
