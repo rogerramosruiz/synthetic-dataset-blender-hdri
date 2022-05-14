@@ -1,4 +1,5 @@
 import os 
+from data import collection_start, collection_end
 
 def convertYolo(x1,y1,x2,y2, shape):
     x = ((x1 + x2) / 2) / shape[1]
@@ -38,7 +39,7 @@ def minObj(obj):
     return minz
 
 def progress(colname, i= None, n=None):
-    with open('progress.txt', 'a') as f:
+    with open(f'progress {collection_start} - {collection_end}.txt', 'a') as f:
         if i==None and n == None:
             f.write('-------------------------------------------\n')
             f.write(f'\t\t\tdone {colname}\n')

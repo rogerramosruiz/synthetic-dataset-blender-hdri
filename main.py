@@ -11,7 +11,7 @@ from camera import changeResolution, boundingBox, changeFocalLength
 from objOps import delete, copy
 from utils import init, progress
 from hdri import changeHDRI
-from data import images_per_class, saveDir, hdrisDIr, filenameSize, prob_many_objs, prob_add_obj
+from data import images_per_class, saveDir, hdrisDIr, filenameSize, prob_many_objs, prob_add_obj, collection_start, collection_end
 from ground import adjustGround
 from color import shiftColor
 
@@ -84,12 +84,17 @@ def save(objs, colls = [0]):
 
 
 def main(n):
+    b = False
     for i in collections:
-        for j in range(n):
-            useCollection(i)
-            progress(i.name, j+1, n)
-        progress(i.name)
-
+        if i.name == collection_start:
+            b = True
+        if b:
+            for j in range(n):
+                useCollection(i)
+                progress(i.name, j+1, n)
+            progress(i.name)
+        if i.name == collection_end:
+            break
 
 if __name__ == '__main__':
     hdris       = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]

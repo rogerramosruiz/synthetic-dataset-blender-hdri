@@ -1,4 +1,15 @@
 # Initial data
+"""
+bag
+bottle
+container
+cup
+gloves
+spoon
+straw
+"""
+collection_start  = 'bag'
+collection_end    = 'straw'
 images_per_class = 1
 filenameSize     = 10
 saveDir          = 'D:/dataset_shyntethic'
