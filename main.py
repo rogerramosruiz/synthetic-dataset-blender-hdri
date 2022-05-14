@@ -9,7 +9,7 @@ sys.path.append('.')
 from transformations import transform
 from camera import changeResolution, boundingBox, changeFocalLength
 from objOps import delete, copy
-from utils import init
+from utils import init, progress
 from hdri import changeHDRI
 from data import images_per_class, saveDir, hdrisDIr, filenameSize, prob_many_objs, prob_add_obj
 from ground import adjustGround
@@ -87,8 +87,10 @@ def save(objs, colls = [0]):
 
 def main(n):
     for i in collections:
-        for _ in range(n):
+        for j in range(n):
             useCollection(i)
+            progress(i.name, j+1, n)
+        progress(i.name)
 
 
 if __name__ == '__main__':
