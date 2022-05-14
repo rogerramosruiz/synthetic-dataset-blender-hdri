@@ -1,8 +1,8 @@
 # Initial data
 images_per_class = 1
 filenameSize     = 10
-saveDir          = 'E:/Devs/Python/readyolo/dataset/'
-hdrisDIr         = 'C:/Users/Roger/Documents/synthetic_dataset_HDRI/HDRIS'
+saveDir          = 'D:/dataset_shyntethic'
+hdrisDIr         = 'D:/Devs/python/synthetic-dataset-blender-hdri/HDRIS'
 prob_many_objs   = 0.4
 prob_add_obj     = 0.5
 

@@ -4,7 +4,7 @@ import random
 import os
 import string
 
-sys.path.append(r'C:/Users/Roger/Documents/synthetic_dataset_HDRI')
+sys.path.append('.')
 
 from transformations import transform
 from camera import changeResolution, boundingBox, changeFocalLength
@@ -52,13 +52,14 @@ def useCollection(collection):
         transform(objc)
         materials += shiftColor(objc, bpy.context.scene.objects[i].users_collection[0].name) 
         b = True
-        for j in range(100):
+        attemps = 10
+        for j in range(attemps):
             for o in objects:
                 b = b and not intersersct(o, objc)
             if b:
                 objects.append(objc)
                 break
-            elif j != 99:
+            elif j != (attemps -1):
                 objc.data = bpy.context.scene.objects[i].data.copy()
                 transform(objc)
                 b = True
