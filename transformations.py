@@ -36,9 +36,9 @@ def move(obj):
 
 def rotate(obj): 
     if random.random() < prob_roate:
-        rx = radians(random.randint(minrot[0], maxrot[0]))
-        ry = radians(random.randint(minrot[1], maxrot[1]))
-        rz = radians(random.randint(minrot[2], maxrot[2]))
+        rx = radians(random.uniform(minrot[0], maxrot[0]))
+        ry = radians(random.uniform(minrot[1], maxrot[1]))
+        rz = radians(random.uniform(minrot[2], maxrot[2]))
         obj.rotation_euler = Euler((rx, ry, rz), 'XYZ')
 
 def scale(obj):
