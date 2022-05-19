@@ -3,6 +3,7 @@ import bpy
 import random
 import os
 import string
+import time
 
 sys.path.append('.')
 
@@ -97,7 +98,10 @@ def main(n):
             break
 
 if __name__ == '__main__':
+    startTime = time.time()
     hdris       = [os.path.join(hdrisDIr, i) for i in os.listdir(hdrisDIr)]
     collections = bpy.data.collections['Objects'].children
     names       = init(collections, saveDir)
     main(images_per_class)
+    totalTime =  time.time() - startTime    
+    print('Total time:', totalTime)
