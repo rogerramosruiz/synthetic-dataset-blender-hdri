@@ -73,6 +73,8 @@ def useCollection(collection):
         bpy.data.materials.remove(material)
 def save(objs, colls = [0]):
     filename = randomFilename()
+    while os.path.exists(f'{filename}.jpg'):
+        filename = randomFilename()
     bpy.context.scene.render.filepath = f'{filename}'
     with open (f'{filename}.txt', 'w') as f:
         ln = len(objs)
