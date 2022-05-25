@@ -25,8 +25,8 @@ scale_max        = 2
 
 # rotation (x, y, z) between -360 and 360
 prob_roate       = 0.7
-minrot           = [-90, 0, -90]
-maxrot           = [90, 360, 90]
+minrot           = [-80, 0, -80]
+maxrot           = [80, 360, 80]
 
 # HDRI
 min_hdri_rotation = [-45, 0 , 0]
@@ -45,8 +45,7 @@ objData = {
         'transparent bag': 0.7
     },
     'bottle': {
-        'sameColorProb': 0.9,
-        'Plastic_transparent': 0,
+        'Plastic_transparent': 0.3,
         'lid': 1,
         'label': 1,
         'inner label': 0

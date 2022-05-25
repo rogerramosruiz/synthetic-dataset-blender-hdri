@@ -26,23 +26,25 @@ def colorChange(material, color = None):
     else:
         rgba = color if color != None else [random.random(), random.random(), random.random(), 1]
         material.node_tree.nodes[nodename].inputs[0].default_value = rgba
-    
 
 def colorRamp(material, color = None):
+    randomColor = color == None
     rgba = (random.random(), random.random(), random.random(), 1) if color == None else (color[0], color[1], color[2], 1)
     colorRamp = material.node_tree.nodes['ColorRamp']
     color = Color(rgba[:-1])
     for i in range(len(colorRamp.color_ramp.elements)):
-        if i == 0:
-            colorRamp.color_ramp.elements[i].color = rgba
+        if randomColor:
+            color = Color((random.random(), random.random(), random.random()))
         else:
-            color.hsv = (color.h, color.s, random.random())
-            colorRamp.color_ramp.elements[i].color = (color.r, color.g, color.b, 1)
+            if i == 0:
+                colorRamp.color_ramp.elements[i].color = rgba
+            else:
+                color.hsv = (color.h, color.s, random.random())
+        colorRamp.color_ramp.elements[i].color = (color.r, color.g, color.b, 1)
 
 
 def colorBottle(obj, collectionName):
     materials = []
-    color = (random.random(), random.random(), random.random(), 1)
     for i in range(len(obj.material_slots)):
         material = obj.material_slots[i].material
         newMaterial = material.copy()
@@ -50,10 +52,17 @@ def colorBottle(obj, collectionName):
         materials.append(newMaterial)
         prob = objData[collectionName][material.name]
         if random.random() < prob:
-            sameColorProb = objData[collectionName]['sameColorProb'] if 'sameColorProb' in objData[collectionName] else 0
-            if i > 0 and random.random() > sameColorProb:
-                color = None
-            colorChange(newMaterial, color)
+            color = (random.random(), random.random(), random.random(), 1)
+            if material.name == 'label':
+                noise = newMaterial.node_tree.nodes['Noise Texture.001']
+                noise.inputs['Scale'].default_value = random.uniform(2,30)
+                noise.inputs['Detail'].default_value = random.uniform(0,2)
+                noise.inputs['Roughness'].default_value = random.uniform(0,0.55)
+                noise.inputs['Distortion'].default_value = random.uniform(0,2)
+                newMaterial.node_tree.nodes["Principled BSDF"].inputs['Transmission'].default_value = random.random()
+                colorRamp(newMaterial)
+            else:
+                colorChange(newMaterial, color)
 
     return materials
     
