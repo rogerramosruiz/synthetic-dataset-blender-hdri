@@ -24,7 +24,7 @@ scale_min        = 1
 scale_max        = 2
 
 # rotation (x, y, z) between -360 and 360
-prob_roate       = 0.7
+prob_roate       = 0.55
 minrot           = [-80, 0, -80]
 maxrot           = [80, 360, 80]
 
@@ -48,7 +48,8 @@ objData = {
         'Plastic_transparent': 0.3,
         'lid': 1,
         'label': 1,
-        'inner label': 0
+        'inner label': 0,
+        'no_label_prob': 0.1
     },
     'container': {
         'Plastic_transparent': 0.005,

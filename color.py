@@ -43,14 +43,21 @@ def colorRamp(material, color = None):
         colorRamp.color_ramp.elements[i].color = (color.r, color.g, color.b, 1)
 
 
+
 def colorBottle(obj, collectionName):
     materials = []
     for i in range(len(obj.material_slots)):
+        no_label_prob =  objData[collectionName]['no_label_prob']
         material = obj.material_slots[i].material
+        prob = 0
+        # remove label maeterial
+        if random.random() < no_label_prob and 'label' in material.name:
+            material = obj.material_slots[0].material
+        else:
+            prob = objData[collectionName][material.name]
         newMaterial = material.copy()
         obj.material_slots[i].material = newMaterial
         materials.append(newMaterial)
-        prob = objData[collectionName][material.name]
         if random.random() < prob:
             color = (random.random(), random.random(), random.random(), 1)
             if material.name == 'label':
