@@ -62,10 +62,10 @@ def colorBottle(obj, collectionName):
             color = (random.random(), random.random(), random.random(), 1)
             if material.name == 'label':
                 noise = newMaterial.node_tree.nodes['Noise Texture.001']
-                noise.inputs['Scale'].default_value = random.uniform(2,30)
+                noise.inputs['Scale'].default_value = random.uniform(3,30)
                 noise.inputs['Detail'].default_value = random.uniform(0,2)
                 noise.inputs['Roughness'].default_value = random.uniform(0,0.55)
-                noise.inputs['Distortion'].default_value = random.uniform(0,2)
+                noise.inputs['Distortion'].default_value = random.uniform(0,5)
                 newMaterial.node_tree.nodes["Principled BSDF"].inputs['Transmission'].default_value = random.random()
                 colorRamp(newMaterial)
             else:
