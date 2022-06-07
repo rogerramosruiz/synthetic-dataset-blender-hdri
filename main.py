@@ -93,7 +93,11 @@ def main(n):
             b = True
         if b:
             for j in range(n):
+                tm = time.time()
                 useCollection(i)
+                endt = time.time() - tm
+                with open('algtimes.txt', 'a') as f:
+                    f.write(f'{endt}\n')
                 progress(i.name, j+1, n)
             progress(i.name)
         if i.name == collection_end:
