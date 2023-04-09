@@ -7,8 +7,8 @@ images_per_class = 0
 filename_size     = 10
 # Location to save the dataset, must be full path
 save_dir          = 'D:/dataset_shyntethic_hdri'
-# Location of the images, must be full path
-hdris_dir         = 'D:/generadores/hdri-downloader/downloads'
+# Location of the hdri images, must be full path
+hdris_dir         = 'D:/hdri_images'
 
 # Probability of having more than one object per background image
 # if the value is 0 then there will just one object per background image
