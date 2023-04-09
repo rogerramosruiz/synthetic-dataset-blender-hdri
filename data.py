@@ -8,12 +8,12 @@ gloves
 spoon
 straw
 """
-collection_start  = 'bag'
-collection_end    = 'straw'
+collection_start = 'bag'
+collection_end = 'straw'
 images_per_class = 1
-filenameSize     = 10
-saveDir          = 'D:/dataset_shyntethic'
-hdrisDIr         = 'D:/Devs/python/synthetic-dataset-blender-hdri/HDRIS'
+filename_size     = 10
+save_dir          = 'D:/dataset_shyntethic_hdri'
+hdris_dir         = 'D:/generadores/hdri-downloader/downloads'
 prob_many_objs   = 0.3
 prob_add_obj     = 0.5
 
@@ -25,8 +25,8 @@ scale_max        = 2
 
 # rotation (x, y, z) between -360 and 360
 prob_roate       = 0.55
-minrot           = [-80, 0, -80]
-maxrot           = [80, 360, 80]
+min_rot           = [-80, 0, -80]
+max_rot           = [80, 360, 80]
 
 # HDRI
 min_hdri_rotation = [-45, 0 , 0]
@@ -39,7 +39,7 @@ prob_common_res    = 0.6
 prob_high_res      = 0.05
 prob_flip_res      = 0.3 
 
-objData = {
+obj_data = {
     'bag': {
         'garbagebags': 0.1,
         'transparent bag': 0.7

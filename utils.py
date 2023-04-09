@@ -1,7 +1,7 @@
 import os 
 from data import collection_start, collection_end
 
-def convertYolo(x1,y1,x2,y2, shape):
+def convert_yolo(x1,y1,x2,y2, shape):
     x = ((x1 + x2) / 2) / shape[1]
     y = ((y1 + y2) / 2) / shape[0]
     h = abs(y1 - y2) / shape[0]
@@ -29,7 +29,7 @@ def init(collections, path):
                 f.write('\n')
     return names
 
-def minObj(obj):
+def min_obj_z(obj):
     mat   = obj.matrix_world
     minz = (mat @ obj.data.vertices[0].co)[2]
     for i in obj.data.vertices:

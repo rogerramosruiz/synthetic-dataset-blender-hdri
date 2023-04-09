@@ -4,11 +4,11 @@ from math import atan, tan
 import bpy_extras
 from mathutils.geometry import intersect_line_plane as ilp
 
-from utils import convertYolo, distance
+from utils import convert_yolo, distance
 from data import common_resolutions, high_resolutions, prob_common_res, prob_high_res, prob_flip_res
 cam =  bpy.data.objects['Camera']
 
-def getAngles():
+def get_angles():
     scene = bpy.context.scene    
     frame = cam.data.view_frame(scene = scene)
     x = abs(frame[0][0])
@@ -18,24 +18,24 @@ def getAngles():
     angleY = atan(y/z)
     return angleX, angleY
 
-def camBox(obj):
-    angleX, angleY = getAngles()
+def cam_box(obj):
+    angleX, angleY = get_angles()
     distanceY = distance(obj, cam)
     width  = tan(angleX) * distanceY
     height = tan(angleY) * distanceY
     return width, height
 
-def adjustResolution(img):
+def adjust_resolution(img):
     width, height = img.size
     bpy.context.scene.render.resolution_x = width
     bpy.context.scene.render.resolution_y = height
     bpy.context.scene.render.resolution_percentage = random.randint(10, 50) if width > 3000 or height > 3000 else 100
 
-def boundingBox(obj, yoloFormat = False, cropped = True):
+def bounding_box(obj, yolo_format = False, cropped = True):
     scene = bpy.context.scene
-    renderScale = scene.render.resolution_percentage / 100
-    width  = int(scene.render.resolution_x * renderScale)
-    height = int(scene.render.resolution_y * renderScale)
+    render_scale = scene.render.resolution_percentage / 100
+    width  = int(scene.render.resolution_x * render_scale)
+    height = int(scene.render.resolution_y * render_scale)
     mat   = obj.matrix_world
     x, y, _ = bpy_extras.object_utils.world_to_camera_view(scene, cam, obj.data.vertices[0].co)
     left = right = x
@@ -57,13 +57,13 @@ def boundingBox(obj, yoloFormat = False, cropped = True):
         p1 = (max(p1[0], 0), max(p1[1], 0))
         p2 = (min(p2[0], width), min(p2[1], height))
         
-    if yoloFormat:
-        return convertYolo(p1[0], p1[1], p2[0], p2[1], (height, width))
+    if yolo_format:
+        return convert_yolo(p1[0], p1[1], p2[0], p2[1], (height, width))
     return p1, p2
 
     
-def projectCam():
-    planeCoords = []
+def project_cam():
+    plane_coordinates = []
     scene = bpy.context.scene
     mat = cam.matrix_world
     translation = mat.translation
@@ -75,25 +75,25 @@ def projectCam():
         v = (pers[2] + (i[0] * x + i[1] * y)) - translation
         pt = ilp(translation, translation +  v, (0, 0, 0), (0, 0, 1), True)    
         if pt and (pt - translation).dot(v) > 0:
-            planeCoords.append(pt)
+            plane_coordinates.append(pt)
  
-    return planeCoords
+    return plane_coordinates
 
-def checkInsideFrame(obj):
+def is_inside_frame(obj):
     scene = bpy.context.scene
-    p1, p2 = boundingBox(obj, False, False)
+    p1, p2 = bounding_box(obj, False, False)
     renderScale = scene.render.resolution_percentage / 100
     width  = int(scene.render.resolution_x * renderScale)
     height = int(scene.render.resolution_y * renderScale)
     return p1[0] >= 0 and p1[1] >= 0 and p2[0] <= width and p2[1] <= height
 
-def changeFocalLength(val= None):
+def change_focal_length(val= None):
     if val:
         cam.data.lens = val
     else:
         cam.data.lens = random.randint(25,65)
 
-def changeResolution():
+def change_resolution():
     scene = bpy.context.scene
     if random.random() < prob_common_res:
         x, y = random.choice(common_resolutions)

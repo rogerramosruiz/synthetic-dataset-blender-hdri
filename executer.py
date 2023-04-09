@@ -1,7 +1,7 @@
 import subprocess
 import time
 
-images_per_classs = 1000
+images_per_classs = 1
 max_imgs = 100
 blenderfile = "syntethic_hdri_1.blend"
 start = 'bag'
@@ -13,7 +13,7 @@ rest = images_per_classs % max_imgs
 
 file = 'data.py'
 def render():
-    subprocess.run(["C:/Program Files/Blender Foundation/Blender 3.1/blender",blenderfile, "--background", "--python", "main.py"])
+    subprocess.run(["C:/Program Files/Blender Foundation/Blender 3.5/blender",blenderfile, "--background", "--python", "main.py"])
 
 def edit(n, i):
     with open(file, 'r') as f:
