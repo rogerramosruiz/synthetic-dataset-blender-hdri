@@ -12,7 +12,7 @@ from camera import change_resolution, bounding_box, change_focal_length
 from objOps import delete, copy
 from utils import init, progress
 from hdri import change_HDRI
-from data import images_per_class, save_dir, hdris_dir, filename_size, prob_many_objs, prob_add_obj, collection_start, collection_end
+from data import images_per_class, save_dir, hdris_dir, filename_size, prob_many_objs, prob_add_obj
 from ground import adjust_ground
 from color import shift_color
 
@@ -146,21 +146,14 @@ def save(objs, colls):
 
 
 def main(n):
-    b = False
     for i in collections:
-        if i.name == collection_start:
-            b = True
-        if b:
-            for j in range(n):
-                tm = time.time()
-                use_collection(i)
-                endt = time.time() - tm
-                with open('algtimes.txt', 'a') as f:
-                    f.write(f'{endt}\n')
-                progress(i.name)
+        for _ in range(n):
+            start_time = time.time()
+            use_collection(i)
+            total_time = time.time() - start_time
+            with open('algtimes.txt', 'a') as f:
+                f.write(f'{total_time}\n')
             progress(i.name)
-        if i.name == collection_end:
-            break
 
 if __name__ == '__main__':
     startTime = time.time()
