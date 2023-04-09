@@ -1,5 +1,7 @@
 import os 
-from data import collection_start, collection_end
+
+prog = {}
+prog_file_name = 'progress.txt'
 
 def convert_yolo(x1,y1,x2,y2, shape):
     x = ((x1 + x2) / 2) / shape[1]
@@ -42,14 +44,25 @@ def min_obj_z(obj):
 
     return minz
 
-def progress(colname, i= None, n=None):
+def save():
+    with open(prog_file_name, 'w') as f:
+        for i, v in prog.items():
+            f.write(f'{i}:{v}\n')
+
+def load():
+    if not os.path.exists(prog_file_name):
+        return
+    with open(prog_file_name, 'r') as f:
+        for i in f.read().splitlines():
+            vals  = i.split(':')
+            prog[vals[0]] = int(vals[1])
+
+
+def progress(colname):
     """
     Save in a txt file the progress made
     """
-    with open(f'progress {collection_start} - {collection_end}.txt', 'a') as f:
-        if i==None and n == None:
-            f.write('-------------------------------------------\n')
-            f.write(f'\t\t\tdone {colname}\n')
-            f.write('-------------------------------------------\n')
-            return
-        f.write(f'{colname} {i}/{n}\n')
+    if len(prog) == 0:
+        load()
+    prog[colname] = prog[colname] + 1 if colname in prog else 1
+    save()

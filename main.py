@@ -157,7 +157,7 @@ def main(n):
                 endt = time.time() - tm
                 with open('algtimes.txt', 'a') as f:
                     f.write(f'{endt}\n')
-                progress(i.name, j+1, n)
+                progress(i.name)
             progress(i.name)
         if i.name == collection_end:
             break
