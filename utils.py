@@ -10,6 +10,11 @@ def convert_yolo(x1,y1,x2,y2, shape):
 
 
 def init(collections, path):
+    """
+    Initialization
+    Creates a directory to renderthe images and saves 
+    the classes.txt with all the collections names
+    """
     if not os.path.exists(path):
         os.mkdir(path)
     names = {}
@@ -24,6 +29,11 @@ def init(collections, path):
     return names
 
 def min_obj_z(obj):
+    """
+    obj: Blender mesh 
+
+    Returns the lowest value in z coordenate of a mesh
+    """
     mat   = obj.matrix_world
     minz = (mat @ obj.data.vertices[0].co)[2]
     for i in obj.data.vertices:
@@ -33,6 +43,9 @@ def min_obj_z(obj):
     return minz
 
 def progress(colname, i= None, n=None):
+    """
+    Save in a txt file the progress made
+    """
     with open(f'progress {collection_start} - {collection_end}.txt', 'a') as f:
         if i==None and n == None:
             f.write('-------------------------------------------\n')

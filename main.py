@@ -16,73 +16,130 @@ from data import images_per_class, save_dir, hdris_dir, filename_size, prob_many
 from ground import adjust_ground
 from color import shift_color
 
-def randomFilename():
+def random_filename():
+    """
+    Genrate a random string 
+    """
     letters = string.ascii_lowercase + string.ascii_uppercase
     name = ''.join(random.choice(letters) for _ in range(filename_size))
     return f'{save_dir}/{name}'
 
 def intersersct(obj1,obj2):
+    """
+    Check if two obejct intersect from the camera view perspective
+    """
     # Boundingbox the objects
     o1p1, o1p2 = bounding_box(obj1)
     o2p1, o2p2  = bounding_box(obj2)
     return o1p1[0] < o2p2[0] and o1p2[0] > o2p1[0] and o1p1[1] < o2p2[1] and o1p2[1] > o2p1[1] 
 
-def chooseObjs(collection):
-    collectionsNames = [collection.name]
-    renderObjs = [random.choice(collection.all_objects).name]
+def choose_objs(collection):
+    """
+    collection: main collection to use
+
+    Choose an object mesh from a collection 
+    returns a list of chosed obejcts and a list of collctions names that have been used
+    """
+    # add the principal collection to be used
+    collections_names = [collection.name]
+
+    # Chooose a mesh from collection
+    render_objs = [random.choice(collection.all_objects).name]
+    # Add others collections with randomly with probabily of prob_many_objs
     if random.random() < prob_many_objs:
         for i in collections:
+            # Choose collection with probabliy of prob_add_obj
             if random.random() < prob_add_obj:
-                renderObjs.append(random.choice(i.all_objects).name)
-                collectionsNames.append(i.name)
-    return renderObjs, collectionsNames
+                # Choose a random object mesh from the random collection selected
+                render_objs.append(random.choice(i.all_objects).name)
+                # Add the collection selectd
+                collections_names.append(i.name)
+    return render_objs, collections_names
 
-def useCollection(collection):
+def use_collection(collection):
+    """
+    collection: main collection to be used for the new render image
+    """
+    # Random resolution
     change_resolution()
+    # Random zoom
     change_focal_length()
+    # Adjust the ground to cameras view
     adjust_ground()
-    renObjs, colls = chooseObjs(collection)
+    # Choose the objects ot be render
+    renObjs, colls = choose_objs(collection)
     objects = []
     materials = []
+    # Set a random hdri image
     img = change_HDRI(random.choice(hdris))
     for i in renObjs:
+        # Copy the current object, so won't be altred for next renders
         objc = copy(i)
+        # Set the object to be visible
         objc.hide_render = False
+        # make random transformations
         transform(objc)
+        # Change the color of the materials in the object mesh 
         materials += shift_color(objc, bpy.context.scene.objects[i].users_collection[0].name) 
         b = True
+        # Try 10 times to randomly acomodate the object mesh inside the view of the camera with no intersections
         attemps = 10
         for j in range(attemps):
+            # check the object dosen't intersect with others from camera's perspective
             for o in objects:
                 b = b and not intersersct(o, objc)
+            # If there is no intersection append the object
             if b:
                 objects.append(objc)
                 break
+            # If the object intersects with others make another random trasnfomation
+            # Unless its the try 9, then the object can not be fitted
             elif j != (attemps -1):
+                # set the copied object mesh the original data like loation, rotation, scale
                 objc.data = bpy.context.scene.objects[i].data.copy()
+                # ranodm transfomration
                 transform(objc)
                 b = True
+        # If the object was not placed delete it
         if not b:
             delete(objc)
+    # Render and save the coordenates
     save(objects, colls)
+    # Dispose copied objects 
     for obj in objects:
         obj.hide_render = True
         delete(obj)
+    # Remove hdri image
     bpy.data.images.remove(img)
+    # Dispose copied materials
     for material in materials:
         bpy.data.materials.remove(material)
-def save(objs, colls = [0]):
-    filename = randomFilename()
+
+def save(objs, colls):
+    """ 
+    objs: Array with the blender object meshes used
+    colls: Array with the collection's names used
+
+    Save a new render image and a txt file with the coordenates (YOLO)
+    of the objects contained in the image 
+    """
+    # Random file name
+    filename = random_filename()
+    # Ensure the file name dosen't exist already
     while os.path.exists(f'{filename}.jpg'):
-        filename = randomFilename()
+        filename = random_filename()
+    # Set the path for saving the render image
     bpy.context.scene.render.filepath = f'{filename}'
+    # Save the txt file with the coordenates of the image
     with open (f'{filename}.txt', 'w') as f:
         ln = len(objs)
         for i in range(len(objs)):
+            # Get the bouding box of the objects in YOLO formtat
             x, y, w, h = bounding_box(objs[i], True)
             f.write(f'{names[colls[i]]} {x} {y} {w} {h}')
             if i != ln - 1 :
                 f.write('\n')  
+    # Render the image
     bpy.ops.render.render(write_still = True)
 
 
@@ -94,7 +151,7 @@ def main(n):
         if b:
             for j in range(n):
                 tm = time.time()
-                useCollection(i)
+                use_collection(i)
                 endt = time.time() - tm
                 with open('algtimes.txt', 'a') as f:
                     f.write(f'{endt}\n')
