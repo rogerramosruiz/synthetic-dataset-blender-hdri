@@ -67,44 +67,46 @@ def use_collection(collection):
     # Adjust the ground to cameras view
     adjust_ground()
     # Choose the objects ot be render
-    renObjs, colls = choose_objs(collection)
+    possible_objs, possible_collections = choose_objs(collection)
     objects = []
     materials = []
+    collections = []
     # Set a random hdri image
     img = change_HDRI(random.choice(hdris))
-    for i in renObjs:
+    for i, coll in zip(possible_objs, possible_collections):
         # Copy the current object, so won't be altred for next renders
-        objc = copy(i)
+        obj_copy = copy(i)
         # Set the object to be visible
-        objc.hide_render = False
+        obj_copy.hide_render = False
         # make random transformations
-        transform(objc)
+        transform(obj_copy)
         # Change the color of the materials in the object mesh 
-        materials += shift_color(objc, bpy.context.scene.objects[i].users_collection[0].name) 
+        materials += shift_color(obj_copy, bpy.context.scene.objects[i].users_collection[0].name) 
         b = True
         # Try 10 times to randomly acomodate the object mesh inside the view of the camera with no intersections
-        attemps = 10
-        for j in range(attemps):
+        attempts = 10
+        for j in range(attempts):
             # check the object dosen't intersect with others from camera's perspective
             for o in objects:
-                b = b and not intersersct(o, objc)
+                b = b and not intersersct(o, obj_copy)
             # If there is no intersection append the object
             if b:
-                objects.append(objc)
+                collections.append(coll)
+                objects.append(obj_copy)
                 break
             # If the object intersects with others make another random trasnfomation
             # Unless its the try 9, then the object can not be fitted
-            elif j != (attemps -1):
+            elif j != (attempts -1):
                 # set the copied object mesh the original data like loation, rotation, scale
-                objc.data = bpy.context.scene.objects[i].data.copy()
+                obj_copy.data = bpy.context.scene.objects[i].data.copy()
                 # ranodm transfomration
-                transform(objc)
+                transform(obj_copy)
                 b = True
         # If the object was not placed delete it
         if not b:
-            delete(objc)
+            delete(obj_copy)
     # Render and save the coordenates
-    save(objects, colls)
+    save(objects, collections)
     # Dispose copied objects 
     for obj in objects:
         obj.hide_render = True
