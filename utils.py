@@ -8,12 +8,6 @@ def convert_yolo(x1,y1,x2,y2, shape):
     w = abs(x2 - x1) / shape[1]
     return x, y, w, h
 
-def distance(a, b):
-    # d = a.location - b.location
-    d  = 0
-    for i in range(len(a.location)):
-        d += (a.location[i] - b.location[i]) ** 2
-    return d ** (1/2)
 
 def init(collections, path):
     if not os.path.exists(path):

@@ -1,35 +1,11 @@
 import bpy
 import random
-from math import atan, tan
 import bpy_extras
 from mathutils.geometry import intersect_line_plane as ilp
 
-from utils import convert_yolo, distance
+from utils import convert_yolo
 from data import common_resolutions, high_resolutions, prob_common_res, prob_high_res, prob_flip_res
 cam =  bpy.data.objects['Camera']
-
-def get_angles():
-    scene = bpy.context.scene    
-    frame = cam.data.view_frame(scene = scene)
-    x = abs(frame[0][0])
-    y = abs(frame[0][1])
-    z = abs(frame[0][2])
-    angleX = atan(x/z)
-    angleY = atan(y/z)
-    return angleX, angleY
-
-def cam_box(obj):
-    angleX, angleY = get_angles()
-    distanceY = distance(obj, cam)
-    width  = tan(angleX) * distanceY
-    height = tan(angleY) * distanceY
-    return width, height
-
-def adjust_resolution(img):
-    width, height = img.size
-    bpy.context.scene.render.resolution_x = width
-    bpy.context.scene.render.resolution_y = height
-    bpy.context.scene.render.resolution_percentage = random.randint(10, 50) if width > 3000 or height > 3000 else 100
 
 def bounding_box(obj, yolo_format = False, cropped = True):
     scene = bpy.context.scene
