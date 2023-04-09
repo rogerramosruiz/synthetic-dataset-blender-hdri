@@ -2,7 +2,7 @@
 # E.G if  there are three collections A, B, C and the value is set to  10 
 # then there will be at least 10 images with collection A, 10 with B, and 10 with C
 # in total there will be 30 images
-images_per_class = 2
+images_per_class = 0
 # name length of the files
 filename_size     = 10
 # Location to save the dataset, must be full path
